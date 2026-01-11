@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Computer System – Interactive Lecture Demo</title>
+
+    <style>
+      /* ================= GLOBAL ================= */
+      body {
+        margin: 0;
+        background: radial-gradient(circle at top, #1e1e2f, #090912);
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      .container {
+        display: flex;
+        padding: 30px;
+        gap: 30px;
+      }
+
+      /* ================= SYSTEM ================= */
+      .system {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+      }
+
+      /* ================= INPUT ================= */
+      .input {
+        background: #3b2eff;
+        padding: 15px;
+        border-radius: 16px;
+      }
+
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 50px);
+        gap: 10px;
+      }
+
+      .keypad button {
+        width: 50px;
+        height: 50px;
+        background: #122dff;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .keypad button:hover {
+        background: #5369ff;
+      }
+
+      .keypad button.key-active {
+        transform: scale(0.9);
+        background: #ff4da6;
+        box-shadow: 0 0 12px rgba(255, 77, 166, 0.9);
+      }
+
+      /* ================= COMPUTER ================= */
+      .computer {
+        background: #2f2f2f;
+        padding: 25px;
+        border-radius: 24px;
+        width: 320px;
+        position: relative;
+      }
+
+      .cpu,
+      .ram,
+      .storage {
+        background: #3b2eff;
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+
+      /* ================= OUTPUT ================= */
+      .output {
+        background: #3b2eff;
+        padding: 15px;
+        border-radius: 16px;
+      }
+
+      .screen {
+        background: black;
+        color: gold;
+        font-size: 48px;
+        padding: 20px;
+        border-radius: 10px;
+        min-width: 120px;
+        text-align: center;
+      }
+
+      /* ================= ARROWS ================= */
+      .arrow {
+        position: absolute;
+        background: hotpink;
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+
+      .arrow.active {
+        opacity: 1;
+      }
+
+      #a1 {
+        width: 120px;
+        height: 4px;
+        left: -120px;
+        top: 80px;
+      }
+      #a2 {
+        width: 4px;
+        height: 50px;
+        left: 50%;
+        top: 160px;
+      }
+      #a3 {
+        width: 4px;
+        height: 50px;
+        left: 50%;
+        top: 225px;
+      }
+      #a4 {
+        width: 120px;
+        height: 4px;
+        right: -120px;
+        top: 80px;
+      }
+
+      /* ================= STEPS ================= */
+      .narration {
+        width: 320px;
+        background: #111;
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .step {
+        background: #1c1c2c;
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        opacity: 0.5;
+        transform: scale(1);
+        transition: all 0.4s ease;
+      }
+
+      .step.active-step {
+        opacity: 1;
+        background: #3b2eff;
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(59, 46, 255, 0.8);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- ================= SYSTEM ================= -->
+      <div class="system">
+        <!-- INPUT -->
+        <div class="input">
+          <h3>Input Device</h3>
+          <div class="keypad">
+            <button data-key="1" onclick="startProcess('1')">1</button>
+            <button data-key="2" onclick="startProcess('2')">2</button>
+            <button data-key="3" onclick="startProcess('3')">3</button>
+            <button data-key="4" onclick="startProcess('4')">4</button>
+            <button data-key="5" onclick="startProcess('5')">5</button>
+            <button data-key="6" onclick="startProcess('6')">6</button>
+            <button data-key="7" onclick="startProcess('7')">7</button>
+            <button data-key="8" onclick="startProcess('8')">8</button>
+            <button data-key="9" onclick="startProcess('9')">9</button>
+            <button data-key="0" onclick="startProcess('0')">0</button>
+          </div>
+        </div>
+
+        <!-- COMPUTER -->
+        <div class="computer">
+          <h2>Computer</h2>
+
+          <div class="arrow" id="a1"></div>
+          <div class="arrow" id="a2"></div>
+          <div class="arrow" id="a3"></div>
+          <div class="arrow" id="a4"></div>
+
+          <div class="cpu">
+            <h3>CPU</h3>
+            <p>Fetches & processes instructions</p>
+          </div>
+
+          <div class="ram">
+            <h3>RAM</h3>
+            <p id="ramData">Empty</p>
+          </div>
+
+          <div class="storage">
+            <h3>Storage</h3>
+            <p>Long-term memory (not used)</p>
+          </div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="output">
+          <h3>Output</h3>
+          <div class="screen" id="screen">0</div>
+        </div>
+      </div>
+
+      <!-- ================= STEPS ================= -->
+      <div class="narration">
+        <h3>Process Steps</h3>
+
+        <div class="step" id="s1">1️⃣ Input device sends data to the system</div>
+
+        <div class="step" id="s2">2️⃣ Input data is stored in RAM</div>
+
+        <div class="step" id="s3">
+          3️⃣ CPU fetches instructions and processes data from RAM
+        </div>
+
+        <div class="step" id="s4">
+          4️⃣ CPU sends processed result to the output device
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let result = "";
+
+      /* ================= HELPERS ================= */
+      function activateStep(stepId, arrowId) {
+        document
+          .querySelectorAll(".step")
+          .forEach((s) => s.classList.remove("active-step"));
+
+        document.getElementById(stepId).classList.add("active-step");
+
+        if (arrowId) {
+          const arrow = document.getElementById(arrowId);
+          arrow.classList.add("active");
+          setTimeout(() => arrow.classList.remove("active"), 600);
+        }
+      }
+
+      /* ================= MAIN FLOW ================= */
+      function startProcess(value) {
+        activateStep("s1", "a1");
+
+        setTimeout(() => {
+          document.getElementById("ramData").innerText = value;
+          activateStep("s2", "a2");
+        }, 700);
+
+        setTimeout(() => {
+          activateStep("s3", "a3");
+        }, 1400);
+
+        setTimeout(() => {
+          result += value;
+          document.getElementById("screen").innerText = result;
+          activateStep("s4", "a4");
+        }, 2100);
+      }
+
+      /* ================= KEYBOARD SUPPORT ================= */
+      document.addEventListener("keydown", (e) => {
+        if (e.key >= "0" && e.key <= "9") {
+          const btn = document.querySelector(`button[data-key="${e.key}"]`);
+          if (btn) {
+            btn.classList.add("key-active");
+            btn.click();
+            setTimeout(() => btn.classList.remove("key-active"), 150);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
